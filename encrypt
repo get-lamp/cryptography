@@ -1,0 +1,56 @@
+#!/usr/bin/php
+<?php
+
+function readimg($url){
+
+	// get contents of a file into a string
+	$fname = $url;
+	$h = fopen($fname, 'r');
+	$c = fread($h, filesize($fname));
+	fclose($h);
+
+	return $c; //unpack('C*', $contents);
+}
+
+function encrypt($plain, $cypher){
+	
+	$key	= array();
+	$plen	= strlen($plain);
+	$olen	= $plen;
+	$clen	= strlen($cypher);	
+	$padl	= abs($plen - $clen);
+
+	if(min($plen, $clen) == $plen)
+		$plain = str_pad($plain, $plen + $padl, chr(0));
+	else
+		$cypher = str_pad($cypher, $clen + $padl, chr(0));
+
+	for($n=0; $n < $olen; $n++)
+		$key[] = ord($plain[$n]) - ord($cypher[$n]);
+
+	return implode(chr(32), $key);
+}
+
+$plain	= "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).";
+$cypher	= file_get_contents('in/A.txt');
+// create key
+echo "Creating 'key-A.txt'...";
+file_put_contents('keys/key-A.txt', encrypt($plain, $cypher));
+echo "Ok".PHP_EOL;
+
+// create key
+echo "Creating 'key-B.txt'...";
+$cypher = file_get_contents('in/B.png');
+file_put_contents('keys/key-B.txt', encrypt( $plain, $cypher ));
+echo "Ok".PHP_EOL;
+
+// create key
+echo "Creating 'key-C.txt'...";
+$plain = file_get_contents('in/B.png');
+$cypher = file_get_contents('in/C.png');
+file_put_contents('keys/key-C.txt', encrypt( $plain, $cypher ));
+echo "Ok".PHP_EOL;
+
+die(PHP_EOL);
+
+?>

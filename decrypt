@@ -1,0 +1,38 @@
+#!/usr/bin/php
+<?php
+
+function decrypt($cypher, $key){
+
+	$key = explode(chr(32), $key);
+	
+	$decoded = '';
+	$cypher = str_pad($cypher, count($key), chr(0));
+		
+	for($n=0; $n < count($key); $n++)
+		$decoded .= chr(ord($cypher[$n]) + $key[$n]);
+
+	return trim($decoded);
+}
+
+echo "Decrypting 'A.txt'...";
+$cypher = file_get_contents('in/A.txt');
+$key = file_get_contents('keys/key-A.txt');
+// decode cypher
+file_put_contents('out/decrypt-A.txt', decrypt($cypher, $key));
+echo 'Ok'.PHP_EOL;
+
+echo "Decrypting 'B.png'...";
+$cypher = file_get_contents('in/B.png');
+$key = file_get_contents('keys/key-B.txt');
+// decode cypher
+file_put_contents('out/decrypt-B.txt', decrypt($cypher, $key));
+echo 'Ok'.PHP_EOL;
+
+
+echo "Decrypting 'C.png'...";
+$cypher = file_get_contents('in/C.png');
+$key = file_get_contents('keys/key-C.txt');
+// decode cypher
+file_put_contents('out/decrypt-C.png', decrypt($cypher, $key));
+echo 'Ok'.PHP_EOL;
+?>
