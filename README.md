@@ -1,2 +1,2 @@
 # cryptography
-Playing James Bond
+Implementing simple encryption schemes.
